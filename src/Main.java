@@ -2,10 +2,14 @@ import java.util.Scanner;
 
 public class Main {
 
+	
+	static ChessGame game;
+	static Scanner scan;
+	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		System.out.print("Starting new game of Chess");
-		ChessGame game = new ChessGame();
+		game = new ChessGame();
 		boolean gameover = false;
 		Scanner scan = new Scanner(System.in);
 		String move;
@@ -15,6 +19,8 @@ public class Main {
 			System.out.println("Enter White move:");
 			move = scan.nextLine();
 			game.move(move);
+			
+			
 			System.out.println("Enter White move:");
 			move = scan.nextLine();
 			game.move(move);
@@ -23,6 +29,18 @@ public class Main {
 		
 		
 
+	}
+	
+	private void processMoveCode(int code) {
+		switch(code) {
+			case 0: return;
+			case 1: {
+				System.out.println("Move not valid, try again");
+				String move = scan.nextLine();
+				code = game.move(move);
+				processMoveCode(code);
+			}
+		}
 	}
 
 }
