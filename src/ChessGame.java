@@ -11,25 +11,20 @@ public class ChessGame {
 	
 	//something to represent the chess board
 	private char[][] board;
-	private String[] locations; //list of piece locations, set by original chess mapping,
 	boolean gameover;
-	/*
-	 * If anyone has a better mapping system, open to suggestions
-	 * Capital letters are white, lowercase is black
-	 * 
-	 * [0]: rook -white
-	 * [1]: knight -white
-	 * [2]  bishop
-	 * [3] ...
-	 * 
-	 * [7] other white rook
-	 * [8]-[15] white pawns
-	 * [16]-[23] black pawns
-	 * [24] black rook
-	 * ...
-	 * [31] other black rook
-	 * 
-	 */
+	
+	//locations of pieces
+	String[] R; //white rooks
+	String[] N; //white knights
+	String[] B; //...
+	String[] K;
+	String[] Q;
+	String[] r; //black rooks
+	String[] n; //...
+	String[] b;
+	String[] q;
+	String[] k; //black king
+
 	
 	
  	
@@ -39,7 +34,6 @@ public class ChessGame {
 	
 	public ChessGame() {
 		board = new char[8][8]; // [A to H], [0 to 8] 
-		locations = new String[32];
 		gameover = false;
 		
 		//initialize board
@@ -88,9 +82,16 @@ public class ChessGame {
 		
 		
 		//initialize locations
-		
-		
-		
+		R = new String[]{"a1", "h1"};
+		N = new String[]{"b1", "g1"};
+		B = new String[]{"c1", "f8"};
+		r = new String[]{"a8", "h8"};
+		n = new String[]{"b8", "g8"};
+		b = new String[]{"c8", "f8"};
+		q = new String[]{"d8"};
+		k = new String[]{"e8"};
+		Q = new String[]{"d1"};
+		K = new String[]{"e1"};
 	}
 	
 	public int move(Move code ) { //numerical code where first two numbers specify the 2d array position of the piece
@@ -170,7 +171,7 @@ public class ChessGame {
 	public String boardToString(){//returns user friendly visual string for the board to be printed
 		StringBuilder res = new StringBuilder();
 		for(int i =7; i>=0; i--) {
-			res.append("\n"+i+" ");
+			res.append("\n"+(i+1)+" ");
 			for (char c: board[i]) {
 				res.append(c);
 				res.append(' ');
