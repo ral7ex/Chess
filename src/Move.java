@@ -7,15 +7,13 @@ public class Move {
 	public Move (String s) throws IllegalArgumentException {
 		s = s.toLowerCase();
 		if (s.length() != 4) throw new IllegalArgumentException();
+		
 		//convert string codes to it
 		r1 = intToInt(s.charAt(1)); // -1 because index
 		r2 = intToInt(s.charAt(3));
 		c1 = letterToInt(s.charAt(0));
 		c2 = letterToInt(s.charAt(2));
 		if (c1==-1 || c2==-1 || r1 ==-1 || r2 ==-1) throw new IllegalArgumentException();
-		
-		
-		
 		
 	}
 	

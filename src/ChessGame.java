@@ -94,19 +94,25 @@ public class ChessGame {
 		K = new String[]{"e1"};
 	}
 	
-	public int move(Move code ) { //numerical code where first two numbers specify the 2d array position of the piece
+	public int move(Move move ) { //numerical code where first two numbers specify the 2d array position of the piece
 		//to be moved and the second two digits specify destination
 		int res;
+		
 		//if not valid return 1
-		if (!isValid(int r1, int c1, int r2, int c2)) return 1;
+		if (!isValid(move)) return 1;
+		
 		//if illegal move return 2
-		if (isIllegal(int r1, int c1, int r2, int c2)) return 2;
+		if (isIllegal(move)) return 2;
+		
+		//if impossible return 5
+		if (!isPossible(move)) res = 5;
+		
 		//if check return 3=
-		if (isCheck(code)) res =  3;
+		if (isCheck(move)) res =  3;
+		
 		//if checkmate return 4
-		if (isCheckmate(code)) res= 4;
-		// if impossible return 5
-		if (!isPossible(code)) res = 5;
+		if (isCheckmate(move)) res= 4;
+		
 		//else return 0
 		res = 0;
 		
@@ -131,29 +137,14 @@ public class ChessGame {
 		return true;
 	}
 	
-	public boolean isPossible(String move) { //determines if move is possible, whether the appropriate piece exists and whether it has
+	public boolean isPossible(Move move) { //determines if move is possible, whether the appropriate piece exists and whether it has
 		//the capability to move to the new location
 		return true;
 	}
 	
-	public boolean isCheck(String move) {
+	public boolean isCheck(Move move) {
 		return false;
 	}
-	
-	public int[] getPosition(char piece) { //returns the array position for a piece
-		int[] position = new int[2]; //array with two spots two hold row and column
-		
-		switch(piece){
-		case 'r':
-			position = [][]
-		}
-	}
-	
-	public String[] getStringPosition(int[] position) { //maps numerical position to string position code for output
-		switch(int[] 0)
-	}
-
-	
 	
 	//other
 	public char[][] getBoard(){
@@ -162,10 +153,6 @@ public class ChessGame {
 	
 	public String[] getLog() {
 		return log;
-	}
-	
-	public String[] getLocations() {
-		return locations;
 	}
 	
 	public String boardToString(){//returns user friendly visual string for the board to be printed
