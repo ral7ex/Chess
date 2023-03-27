@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.regex.*;
 
 public class ChessGame {
@@ -10,8 +11,9 @@ public class ChessGame {
 	//variables
 	
 	//something to represent the chess board
-	private char[][] board;
+	public char[][] board; //TODO make private after testing
 	boolean gameover;
+	boolean white; //who's turn
 	
 	//locations of pieces
 	String[] R; //white rooks
@@ -29,12 +31,14 @@ public class ChessGame {
 	
  	
 	//game move log.
-	private String[] log;
+	private ArrayList<String> log;
 	
 	
 	public ChessGame() {
 		board = new char[8][8]; // [A to H], [0 to 8] 
 		gameover = false;
+		log = new ArrayList<String>(100); //50 moves each to start, auto-resizes as necessary
+		white = true;
 		
 		//initialize board
 		board[0][0] = 'R';
@@ -96,28 +100,34 @@ public class ChessGame {
 	
 	public int move(Move move ) { //numerical code where first two numbers specify the 2d array position of the piece
 		//to be moved and the second two digits specify destination
-		int res;
+		int res = 0;
 		
 		//if not valid return 1
 		if (!isValid(move)) return 1;
 		
 		//if illegal move return 2
-		if (isIllegal(move)) return 2;
+		else if (isIllegal(move)) return 2;
 		
-		//if impossible return 5
-		if (!isPossible(move)) res = 5;
+		//move the piece
+		char replaced = board[move.r2][move.c2]; //what used to be on the destination
+		board[move.r2][move.c2] = board[move.r1][move.c1]; //move piece to destination
+		board[move.r1][move.c1] = '-'; //vacate previous location
+		white = !white;
 		
-		//if check return 3=
-		if (isCheck(move)) res =  3;
+		String logEntry = move.toString()+ (replaced == '-' ? "": (" Captured " +replaced));		
 		
 		//if checkmate return 4
-		if (isCheckmate(move)) res= 4;
+		if (isCheckmate(move)) {
+			res= 4;
+			logEntry = logEntry+ ", Checkmate!";
+		}
+		// if Check return 3
+		else if (isCheck(move)) { 
+			res =  3;
+			logEntry = logEntry+", Check!";
+		}
 		
-		//else return 0
-		res = 0;
-		
-		//move piece and destroy any piece already on that spot.
-		board[]
+		log.add(logEntry);
 		return res;
 		
 	}
@@ -151,7 +161,7 @@ public class ChessGame {
 		return board;
 	}
 	
-	public String[] getLog() {
+	public ArrayList<String> getLog() {
 		return log;
 	}
 	

@@ -1,9 +1,11 @@
 
 public class Move {
+	
 	int r1; //board indexes
 	int r2;
 	int c1;
 	int c2;
+	
 	public Move (String s) throws IllegalArgumentException {
 		s = s.toLowerCase();
 		if (s.length() != 4) throw new IllegalArgumentException();
@@ -27,9 +29,9 @@ public class Move {
 	public String toString() {
 		StringBuilder s = new StringBuilder();
 		s.append(intToLetter(c1));
-		s.append(r1);
+		s.append(r1+1); //+1 because array index starts at 0
 		s.append(intToLetter(c2));
-		s.append(r2);
+		s.append(r2+1);
 		return s.toString();
 	}
 	

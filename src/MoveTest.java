@@ -21,7 +21,7 @@ public class MoveTest {
 		Assert.assertEquals(8, move.r2);
 		
 	}
-	
+	@Test
 	public void testToString() {
 		Move move = new Move("a1h8");
 		Assert.assertEquals("a1h8", move.toString());
