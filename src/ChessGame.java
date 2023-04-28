@@ -5,6 +5,7 @@ public class ChessGame {
 
 	/* A class implementing the game of chess itself.
 	 * Takes moves from each player and runs the game.
+	 * most fields are not private
 	 * */
 	
 	
@@ -102,6 +103,8 @@ public class ChessGame {
 		//to be moved and the second two digits specify destination
 		int res = 0;
 		
+		if (!playerOwnsPiece(move)) return 5;
+		
 		//if not valid return 1
 		if (!isValid(move)) return 1;
 		
@@ -109,12 +112,13 @@ public class ChessGame {
 		else if (isIllegal(move)) return 2;
 		
 		//move the piece
+		boolean capture = hasCapture(move); //save for later
 		char replaced = board[move.r2][move.c2]; //what used to be on the destination
 		board[move.r2][move.c2] = board[move.r1][move.c1]; //move piece to destination
 		board[move.r1][move.c1] = '-'; //vacate previous location
 		white = !white;
 		
-		String logEntry = move.toString()+ (replaced == '-' ? "": (" Captured " +replaced));		
+		String logEntry = move.toString()+ (capture ? "": (" Captured " +replaced));		
 		
 		//if checkmate return 4
 		if (isCheckmate(move)) {
@@ -142,7 +146,50 @@ public class ChessGame {
 		return false;
 	}
 	
-	public boolean isValid(Move s) { //determines if string is in proper format
+	public boolean playerOwnsPiece(Move m) {
+		char piece = board[m.r1][m.c1];
+		//player owns piece
+		if (isBlackPiece(piece)) {
+			if (white) return false; //black piece on white turn
+		}
+		else {
+			if (!white) return false; //white peice on black turn
+		}
+				
+		return true;
+	}
+	
+	public boolean isValid(Move m) { //determines if move is ok (player owns piece, follows movement rules, 
+		
+		//
+		char piece = board[m.r1][m.c1];
+		
+		//is a move?
+		if (piece == '-') return false; //move is no good if there is no piece.
+		if (m.r1==m.r2 && m.c1==m.c2) return false; //move is no good if it doesn't move.
+		
+		//follows movement rules
+		
+
+		switch(piece) {
+		case 'p':{
+			return validPawnMove(m);
+		}
+		case 'P':{
+			return validPawnMove(m);
+		}
+		case 'n': return validKnightMove(m);
+		case 'N': return validKnightMove(m);
+		case 'r': return validRookMove(m);
+		case 'R': return validRookMove(m);
+		case 'b': return validBishopMove(m);
+		case 'B': return validBishopMove(m);
+		case 'q': return validQueenMove(m);
+		case 'Q': return validQueenMove(m);
+		case 'K': return validKingMove(m);
+		case 'k': return validKingMove(m);
+	}
+		
 		
 		return true;
 	}
@@ -176,6 +223,94 @@ public class ChessGame {
 		}
 		res.append("\n  A B C D E F G H");
 		return res.toString();
+	}
+	
+	public boolean isDiagonalAndNoJump(Move m) { //returns if the move is diagonal and doens't jump
+		int rowDiff = (m.r1 - m.r2);
+	    int colDiff = (m.c1 - m.c2);
+	    if (Math.abs(rowDiff) != Math.abs(colDiff)) return false; //not diagonal
+	    
+	    boolean rIncreasing = rowDiff<0;
+	    boolean cIncreasing = colDiff<0;
+	    
+	    int offset=1;
+	    while(offset<rowDiff) {
+	    	if (board[m.r1+offset * (rIncreasing? 1:-1 )][m.c1+offset * (cIncreasing? 1:-1)] != '-') {
+	    		return false; // diagonal encountered something 
+	    	}
+	    	offset++;
+	    }
+	    return true;
+	}
+	
+	public boolean hasCapture(Move m) {
+		if (board[m.r2][m.c2] != '-') return true;
+		return false;
+	}
+	
+	
+	public boolean isStraightAndNoJump(Move m) { //returns if the move is straight along a row or column
+		
+		boolean sameRow = m.r1==m.r2;
+		boolean sameCol = m.c1==m.c2;
+		if (!sameRow && !sameCol) return false; //not straight
+		
+		int start, end; //arbitrary indexes for traverse
+		if (sameCol) {
+			start = (m.r1<m.r2) ? m.r1: m.r2;
+			end = (m.r1<m.r2) ? m.r1: m.r2;
+			for (int i=start+1; i<end; i++) {
+				if (board[i][m.c1]!='-') return false; //has a jump because encountered something along the path
+			}
+		}
+		else { //must be same row then
+			start = (m.c1<m.c2) ? m.c1: m.c2;
+			end = (m.c1<m.c2) ? m.c1: m.c2;
+			for (int i=start+1; i<end; i++) {
+				if (board[m.r1][i]!='-') return false; //has a jump because encountered something along the path
+			}
+		}
+		return true;
+	}
+	
+	
+	private boolean isBlackPiece(char c) {
+		if (c=='p' || c=='r' || c=='b' || c=='n' || c=='k' || c=='q') {
+			return true;
+		}
+		return false;
+	}
+	
+	private boolean validPawnMove(Move m) {
+		if (!hasCapture(m) && m.r2-m.r1== (white? 1:-1)) return true; //pawn moved foward
+		else if (hasCapture(m) && (white && m.r2-m.r1==1) || (!white && m.r2-m.r1==-1) && Math.abs(m.c2-m.c1)==1) {
+			return true; //diagonal capture
+		}
+		else if((white && m.r1==1)||(!white && m.r1==6) && m.r2-m.r1 == (white? 2:-2)) { //pawn in starting position can go two foward
+			return true;
+		}
+		return false;
+	}
+	
+	private boolean validRookMove(Move m) {
+		return false;
+	}
+	
+	private boolean validKnightMove(Move m) {
+		return false;
+	}
+	
+	private boolean validBishopMove(Move m) {
+		return false;
+	}
+	
+	private boolean validKingMove(Move m) {
+		//remember to castle
+		return false;
+	}
+	
+	private boolean validQueenMove(Move m) {
+		return false;
 	}
 	
 }

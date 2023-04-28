@@ -55,6 +55,10 @@ public class Main {
 							System.out.println("Checkmate!");
 							break;
 						}
+						case 5: {
+							System.out.println("This is not one of your pieces.");
+							break;
+						}
 					}
 					
 					

@@ -8,7 +8,8 @@ public class ChessGameTest {
 	@Test
 	public void testMove() {
 		ChessGame game = new ChessGame();
-		game.move(new Move("a2a4"));
+		Move m = new Move("a2a4");
+		game.move(m);
 		System.out.println(game.board[1][0]);
 		Assert.assertEquals('-', game.board[1][0]);
 		Assert.assertEquals('P', game.board[3][0]);
@@ -20,6 +21,9 @@ public class ChessGameTest {
 		 * 2. test upon check
 		 * 3. test upon checkmate: validated
 		 */
+		
+		
+		Assert.assertFalse(game.isStraightAndNoJump(m));
 		
 	}
 	
